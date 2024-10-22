@@ -1,0 +1,102 @@
+//Program to convert infix to postfix
+#include<stdio.h>
+#include<conio.h>
+#include<stdlib.h>
+#include<ctype.h>
+char stack[100];
+int top = -1;
+char item;
+int i,max=100;
+
+void push(char item)
+{
+    if(top == max)
+    {
+        printf("STACK IS OVERFLOW!");
+    }
+    else
+    {
+        top = top+1;
+        stack[top]=item;
+    }
+}
+
+void pop(char item)
+{
+
+    if(top == -1)
+    {
+        printf("STACK IS UNDERFLOW!");
+    }
+    else
+    {
+        item= stack[top];
+        top=top-1;
+    }
+}
+
+int priority(char op)
+{
+    if(op=='^')
+        return 1;
+    if(op == '*' || op == '/')
+        return 2;
+    if(op == '+' || op == '-')
+        return 3;
+    return 0;
+}
+
+char checkifoperand(char op)
+{
+    return(op>='a'&& op<='z'||op>='A' && op<='Z'|| op>='0' && op<='9');
+}
+
+void conversion(char* infix,char* postfix)
+{
+    int j=0;
+    for(i=0;infix[i]!='\0';i++)
+    {
+        if(checkifoperand(infix[i]))
+        {
+            j=j+1;
+            postfix[j]=infix[i];
+        }
+        else if(infix[i]=='(')
+        {
+            push(infix[i]);
+        }
+        else if(infix[i]==')')
+        {
+            while((infix[i])!='(')
+            {
+                postfix[j++]=pop();
+                infix[i--];
+            }
+        }
+        else
+        {
+            while(priority(stack[top])>=priority(infix[i]))
+            {
+                postfix[j++]=pop();
+                infix[i--];
+            }
+            push(infix[i]);
+        }
+     }
+     while(!is_empty())
+     {
+         postfix[j++]=pop();
+     }
+     postfix[j]='\0';
+}
+int main()
+{
+    char infix[100],postfix[100];
+    printf("ENTER YOUR INFIX EXPRESSION:");
+    scanf("%s",infix);
+
+    conversion(infix[25],postfix[25]);
+
+    printf("POSTFIX EXPRESSON:%s",postfix);
+    return 0;
+}
